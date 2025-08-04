@@ -1,18 +1,19 @@
-# Raspberry Pi 5 Gaming Kiosk
+# Raspberry Pi 5 GeForce Now Gaming Kiosk
 
-Transform your Raspberry Pi 5 into a dedicated gaming kiosk with Steam Big Picture mode and GeForce Now cloud gaming integration.
+Transform your Raspberry Pi 5 into a dedicated GeForce Now cloud gaming kiosk that boots directly to gaming.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi%205-red.svg)
 
 ## ✨ Features
 
-- **Auto-boot gaming environment** - Boots directly to a gaming menu
-- **GeForce Now cloud gaming** - Stream AAA games via optimized Chromium browser
-- **Steam Big Picture mode** - Access your local Steam library
-- **Performance optimized** - GPU, CPU, and network optimizations included
+- **Auto-boot to GeForce Now** - Boots directly to cloud gaming
+- **Optimized for Pi 5** - Hardware-accelerated Chromium with gaming flags
+- **Performance tuned** - GPU, CPU, and network optimizations included
+- **Kiosk mode** - Full-screen gaming experience
 - **Easy troubleshooting** - Built-in diagnostic and monitoring tools
 - **Emergency exit hotkey** - `Ctrl+Alt+X` for system access
+- **Simple restart options** - Easy shutdown/restart after gaming sessions
 
 ## 🔧 Requirements
 
@@ -45,14 +46,15 @@ wget https://raw.githubusercontent.com/WonderBoyHub/rpi-steam/main/rpi5-gaming-k
 ```bash
 sudo reboot
 ```
-Your Pi will now boot directly to the gaming menu!
+Your Pi will now boot directly to GeForce Now!
 
 ## 🎮 Usage
 
 ### Gaming
-1. **Boot** - Your Pi automatically starts the gaming launcher
-2. **Choose** - Select "GeForce Now" or "Steam Big Picture"
-3. **Play** - Log in and start gaming
+1. **Boot** - Your Pi automatically shows a welcome message
+2. **Start** - Click OK to launch GeForce Now in kiosk mode
+3. **Play** - Log in to your GeForce Now account and start gaming
+4. **End Session** - After gaming, choose to restart, shutdown, or exit
 
 ### System Access
 - **Emergency Exit**: Press `Ctrl+Alt+X` to access terminal
@@ -76,15 +78,16 @@ wget https://raw.githubusercontent.com/WonderBoyHub/rpi-steam/main/geforce-now-o
 
 ### System Setup
 - Dedicated `gamer` user with auto-login
-- Chromium browser with gaming optimizations
-- Steam for local gaming
+- Chromium browser with GeForce Now optimizations
 - Openbox window manager for kiosk mode
+- Zenity for user interface dialogs
 
 ### Performance Tweaks
-- GPU memory optimization
+- GPU memory optimization (128MB split)
 - CPU performance governor
-- Network buffer tuning
+- Network buffer tuning for gaming
 - Audio system optimization
+- Hardware video acceleration enabled
 
 ## 🔍 Troubleshooting
 
@@ -102,27 +105,24 @@ wget https://raw.githubusercontent.com/WonderBoyHub/rpi-steam/main/geforce-now-o
 - **Temperature**: Monitor with `vcgencmd measure_temp`, ensure good ventilation
 - **GeForce Now**: Start with 720p30, use "Balanced" quality setting
 
-## 📋 System Requirements
+## 📋 Network Requirements
 
-### For GeForce Now
+### For Optimal GeForce Now Performance
 - **Minimum**: 15 Mbps download, <40ms latency
-- **Recommended**: 25+ Mbps download, <20ms latency
-- **Optimal**: 50+ Mbps download, wired connection
-
-### For Local Games
-- ARM64 Linux compatible games only
-- Indie and older titles work best
-- Check [ProtonDB](https://www.protondb.com/) for compatibility
+- **Recommended**: 25+ Mbps download, <20ms latency  
+- **Optimal**: 50+ Mbps download, wired ethernet connection
+- **Ping**: <20ms to GeForce Now servers for best experience
 
 ## 📁 File Structure
 
 ```
 /home/gamer/
-├── gaming-launcher.sh              # Main launcher
-├── launch-geforce-now-optimized.sh # Optimized GeForce Now
+├── gaming-launcher.sh              # GeForce Now launcher script
+├── launch-geforce-now-optimized.sh # Advanced optimizer script  
 ├── monitor-gaming-performance.sh   # Performance monitoring
 ├── geforce-now-troubleshooting.md  # Troubleshooting guide
-└── .config/openbox/                # Window manager config
+├── optimize-network.sh             # Network optimization
+└── .config/openbox/                # Kiosk window manager config
 ```
 
 ## 🔒 Security Notes
@@ -139,8 +139,8 @@ Issues and pull requests are welcome! This project is based on community feedbac
 ## 🙏 Acknowledgments
 
 - Raspberry Pi community for testing and feedback
-- GeForce Now performance optimization guides
-- Steam Big Picture mode setup tutorials
+- GeForce Now performance optimization guides  
+- Cloud gaming optimization tutorials for single-board computers
 
 ## 📄 License
 

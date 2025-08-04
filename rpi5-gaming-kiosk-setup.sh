@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Raspberry Pi 5 Gaming Kiosk Setup Script
-# This script sets up a kiosk mode that boots directly to Steam Big Picture with GeForce Now integration
+# Raspberry Pi 5 GeForce Now Gaming Kiosk Setup Script
+# This script sets up a kiosk mode that boots directly to GeForce Now cloud gaming
 # Run this script on a fresh Raspberry Pi OS Desktop installation
 
 set -e
@@ -43,7 +43,6 @@ sudo apt update && sudo apt upgrade -y
 print_status "Installing required packages..."
 sudo apt install -y \
     chromium-browser \
-    steam \
     xinit \
     xorg \
     openbox \
@@ -55,7 +54,8 @@ sudo apt install -y \
     pulseaudio-utils \
     alsa-utils \
     xserver-xorg-video-all \
-    firmware-brcm80211
+    firmware-brcm80211 \
+    zenity
 
 # Enable GPU memory split for better graphics performance
 print_status "Optimizing GPU settings..."
@@ -72,12 +72,12 @@ if ! id "$KIOSK_USER" &>/dev/null; then
     sudo usermod -a -G audio,video,input,dialout,plugdev,users $KIOSK_USER
 fi
 
-# Create the gaming launcher script
-print_status "Creating gaming launcher script..."
+# Create the GeForce Now launcher script
+print_status "Creating GeForce Now launcher script..."
 sudo tee /home/$KIOSK_USER/gaming-launcher.sh > /dev/null << 'EOF'
 #!/bin/bash
 
-# Gaming Launcher Script for Raspberry Pi 5 Kiosk
+# GeForce Now Launcher Script for Raspberry Pi 5 Kiosk
 
 # Set display
 export DISPLAY=:0
@@ -85,8 +85,9 @@ export DISPLAY=:0
 # Hide cursor
 unclutter -idle 1 -root &
 
-# Function to launch GeForce Now
+# Function to launch GeForce Now with optimal settings
 launch_geforce_now() {
+    echo "Starting GeForce Now..."
     chromium-browser \
         --kiosk \
         --no-first-run \
@@ -94,7 +95,7 @@ launch_geforce_now() {
         --disable-session-crashed-bubble \
         --disable-features=TranslateUI \
         --disable-ipc-flooding-protection \
-        --enable-features=VaapiVideoDecoder \
+        --enable-features=VaapiVideoDecoder,VaapiVideoEncoder \
         --use-gl=egl \
         --enable-gpu-rasterization \
         --enable-oop-rasterization \
@@ -103,74 +104,57 @@ launch_geforce_now() {
         --disable-renderer-backgrounding \
         --disable-backgrounding-occluded-windows \
         --autoplay-policy=no-user-gesture-required \
-        "https://play.geforcenow.com/" &
+        --disable-web-security \
+        --disable-features=VizDisplayCompositor \
+        --max_old_space_size=4096 \
+        "https://play.geforcenow.com/"
 }
 
-# Function to launch Steam Big Picture
-launch_steam() {
-    steam -tenfoot -nobigpicture &
-    sleep 5
-    steam -shutdown &
-    sleep 2
-    steam -tenfoot &
-}
+# Show welcome message
+zenity --info \
+    --title="GeForce Now Gaming Kiosk" \
+    --text="Welcome to your Raspberry Pi 5 GeForce Now Gaming Kiosk!\n\nClick OK to start GeForce Now.\n\nTips:\n• Use wired internet for best performance\n• Press Ctrl+Alt+X for emergency exit\n• Recommended: 720p 30fps for stability" \
+    --width=400
 
-# Create a simple menu using zenity
+# Launch GeForce Now
+launch_geforce_now
+
+# Wait for GeForce Now to close
+wait
+
+# Show exit options
 while true; do
     choice=$(zenity --list \
-        --title="Gaming Kiosk" \
-        --text="Choose your gaming platform:" \
+        --title="GeForce Now Kiosk" \
+        --text="GeForce Now session ended. What would you like to do?" \
         --radiolist \
         --column="Select" \
-        --column="Platform" \
+        --column="Action" \
         --column="Description" \
-        TRUE "GeForce Now" "Stream games from the cloud" \
-        FALSE "Steam Big Picture" "Local Steam games" \
-        FALSE "Exit" "Close the kiosk" \
+        TRUE "Restart GeForce Now" "Start a new gaming session" \
+        FALSE "Shutdown System" "Turn off the Raspberry Pi" \
+        FALSE "Restart System" "Reboot the Raspberry Pi" \
+        FALSE "Exit to Desktop" "Exit kiosk mode" \
         --width=500 \
         --height=300)
 
     case $choice in
-        "GeForce Now")
+        "Restart GeForce Now")
             launch_geforce_now
+            wait
             ;;
-        "Steam Big Picture")
-            launch_steam
+        "Shutdown System")
+            zenity --question --text="Are you sure you want to shutdown?" && sudo shutdown -h now
             ;;
-        "Exit"|"")
+        "Restart System")
+            zenity --question --text="Are you sure you want to restart?" && sudo reboot
+            ;;
+        "Exit to Desktop"|"")
+            pkill -f openbox
             break
             ;;
     esac
-    
-    # Wait for user to close the application before showing menu again
-    sleep 5
 done
-
-# Shutdown or restart options
-shutdown_choice=$(zenity --list \
-    --title="System Options" \
-    --text="What would you like to do?" \
-    --radiolist \
-    --column="Select" \
-    --column="Action" \
-    TRUE "Restart Kiosk" \
-    FALSE "Shutdown System" \
-    FALSE "Restart System" \
-    --width=300 \
-    --height=200)
-
-case $shutdown_choice in
-    "Shutdown System")
-        sudo shutdown -h now
-        ;;
-    "Restart System")
-        sudo reboot
-        ;;
-    *)
-        # Restart the launcher
-        exec $0
-        ;;
-esac
 EOF
 
 sudo chmod +x /home/$KIOSK_USER/gaming-launcher.sh
@@ -298,7 +282,7 @@ sudo tee /usr/local/bin/exit-kiosk > /dev/null << 'EOF'
 # Press Ctrl+Alt+X to activate
 pkill -f "gaming-launcher.sh"
 pkill chromium-browser
-pkill steam
+pkill zenity
 DISPLAY=:0 lxterminal &
 EOF
 
@@ -330,26 +314,30 @@ sudo chown $KIOSK_USER:$KIOSK_USER /home/$KIOSK_USER/optimize-network.sh
 (sudo -u $KIOSK_USER crontab -l 2>/dev/null; echo "@reboot /home/$KIOSK_USER/optimize-network.sh") | sudo -u $KIOSK_USER crontab -
 
 print_status "=========================================="
-print_status "Setup completed successfully!"
+print_status "GeForce Now Gaming Kiosk Setup Complete!"
 print_status "=========================================="
 print_warning "IMPORTANT: Please reboot your Raspberry Pi to apply all changes."
 print_status ""
 print_status "After reboot, your Pi will:"
 print_status "1. Auto-login as user '$KIOSK_USER'"
-print_status "2. Show a menu to choose between GeForce Now and Steam"
-print_status "3. Boot directly into gaming mode"
+print_status "2. Show a welcome message and start GeForce Now"
+print_status "3. Boot directly into GeForce Now gaming mode"
 print_status ""
-print_status "Emergency exit: Press Ctrl+Alt+X to access terminal"
+print_status "Controls:"
+print_status "- Emergency exit: Press Ctrl+Alt+X to access terminal"
+print_status "- After gaming: Choose to restart, shutdown, or exit"
 print_status ""
-print_status "GeForce Now tips:"
-print_status "- Use wired internet connection for best performance"
-print_status "- Use a good quality USB gamepad"
-print_status "- Check your GeForce Now account settings for optimal streaming quality"
+print_status "GeForce Now Optimization Tips:"
+print_status "- Use wired ethernet connection (recommended)"
+print_status "- Start with 720p 30fps for stability"
+print_status "- Use quality USB gamepad/controller"
+print_status "- Ensure stable 25+ Mbps internet connection"
 print_status ""
-print_warning "If you experience lag with GeForce Now, try:"
-print_warning "1. Lowering the stream quality in GeForce Now settings"
-print_warning "2. Using a wired connection instead of Wi-Fi"
-print_warning "3. Closing other network-intensive applications"
+print_warning "Troubleshooting lag issues:"
+print_warning "1. Lower stream quality to 720p 30fps in GeForce Now"
+print_warning "2. Use wired connection instead of Wi-Fi"
+print_warning "3. Close other network applications"
+print_warning "4. Run the GeForce Now optimizer script for additional tweaks"
 
 echo ""
 read -p "Press Enter to continue, then reboot your system..."
