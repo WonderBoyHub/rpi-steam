@@ -1,155 +1,226 @@
-# Raspberry Pi 5 GeForce NOW Kiosk
+# GeForce NOW Kiosk for Raspberry Pi 5
 
-Transform your Raspberry Pi 5 into a dedicated GeForce NOW cloud gaming kiosk that boots directly to streaming AAA games.
+This script transforms your Raspberry Pi 5 into a dedicated GeForce NOW gaming kiosk that boots directly into the streaming service, creating a console-like experience optimized for M2 HAT+ SSD installations.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi%205-red.svg)
+## Features
 
-## ✨ Features
+- 🎮 **Direct Boot to GeForce NOW** - No desktop interaction needed
+- 🚀 **Optimized Performance** - GPU acceleration and network optimizations for streaming
+- 🔧 **Easy Management** - Control script for maintenance and troubleshooting
+- 💾 **SSD Optimized** - Configured for M2 HAT+ SSD installations
+- 🔊 **Audio Ready** - Low-latency audio configuration for gaming
+- 🛡️ **Auto-Recovery** - Automatic restart if the browser crashes
+- 📱 **Kiosk Mode** - Full-screen experience with hidden UI elements
 
-- **Auto-boot gaming environment** - Boots directly to GeForce NOW
-- **GeForce NOW cloud gaming** - Stream AAA games via optimized Chromium browser
-- **Performance optimized** - GPU, CPU, and network optimizations for cloud gaming
-- **Hardware acceleration** - VaapiVideoDecoder enabled for smooth streaming
-- **Easy troubleshooting** - Built-in diagnostic and monitoring tools
-- **Emergency exit hotkey** - `Ctrl+Alt+X` for system access
+## Prerequisites
 
-## 🔧 Requirements
+- Raspberry Pi 5 with M2 HAT+ and SSD
+- Fresh Raspberry Pi OS installation (Desktop version recommended)
+- Internet connection
+- Keyboard for initial setup (can be removed after setup)
 
-### Hardware
-- Raspberry Pi 5 (4GB+ RAM recommended)
-- MicroSD card (Class 10, A2) or USB 3.0 SSD
-- **Wired Ethernet connection** (recommended for best performance)
-- USB gamepad/controller
-- HDMI monitor
-- Official Pi 5 power supply
+## Quick Start
 
-### Software
-- Fresh **Raspberry Pi OS Desktop (64-bit)**
-- GeForce Now account
-- Stable internet (25+ Mbps recommended)
+1. **Download and run the setup script:**
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/yourusername/ki/main/setup-geforce-now-kiosk.sh -o setup-geforce-now-kiosk.sh
+   chmod +x setup-geforce-now-kiosk.sh
+   ./setup-geforce-now-kiosk.sh
+   ```
 
-## 🚀 Quick Start
+2. **Follow the prompts** - The script will guide you through the setup process
 
-### 1. Prepare Your Pi
-1. Flash Raspberry Pi OS Desktop (64-bit) using Raspberry Pi Imager
-2. Complete initial setup wizard
-3. Ensure internet connection is working
+3. **Reboot** - The system will automatically reboot into GeForce NOW kiosk mode
 
-### 2. One-Command Installation
-```bash
-wget https://raw.githubusercontent.com/WonderBoyHub/rpi-steam/main/rpi5-geforce-now-setup.sh && chmod +x rpi5-geforce-now-setup.sh && ./rpi5-geforce-now-setup.sh
-```
+## What the Script Does
 
-### 3. Reboot and Game
-```bash
-sudo reboot
-```
-Your Pi will now boot directly to gaming!
+### System Configuration
+- Sets up automatic login for the `pi` user
+- Installs Chromium browser and essential packages
+- Configures GPU settings for optimal video streaming
+- Optimizes network settings for low latency gaming
 
-## 🎮 Usage
+### Audio Setup
+- Configures PulseAudio for low-latency gaming
+- Sets up proper audio permissions and routing
+- Optimizes audio buffer settings
 
-### Gaming
-1. **Boot** - Your Pi automatically launches GeForce NOW
-2. **Login** - Sign in to your GeForce NOW account
-3. **Play** - Select and start gaming from your library
-
-### System Access
-- **Emergency Exit**: Press `Ctrl+Alt+X` to access terminal
-- **Restart Gaming**: When you close GeForce NOW, you'll get options to restart or shutdown
-
-## ⚡ Optimization (Optional)
-
-For enhanced performance and troubleshooting tools:
-
-```bash
-wget https://raw.githubusercontent.com/WonderBoyHub/rpi-steam/main/geforce-now-optimizer.sh && chmod +x geforce-now-optimizer.sh && ./geforce-now-optimizer.sh
-```
-
-### Optimizer Features
-- **Network performance testing** - Latency and speed diagnostics
-- **Advanced browser optimizations** - Hardware acceleration and memory tuning
-- **Real-time monitoring** - Temperature, CPU, and network stats
-- **Comprehensive troubleshooting guide** - Solutions for common issues
-
-## 🛠️ What Gets Installed
-
-### System Setup
-- Dedicated `gamer` user with auto-login
-- Chromium browser with GeForce NOW optimizations
-- Openbox window manager for kiosk mode
-- Direct boot to GeForce NOW (no menus)
+### Kiosk Mode
+- Creates a systemd service for auto-starting GeForce NOW
+- Configures Chromium with gaming-optimized flags
+- Disables screen blanking and power management
+- Hides cursor and UI elements for immersive experience
 
 ### Performance Optimizations
-- GPU memory optimization for cloud gaming
-- CPU performance governor set to performance mode
-- Network buffer tuning for reduced streaming latency
-- Audio system optimization for gaming
-- Swap file configuration for stable performance
-- Hardware acceleration enabled for video decoding
+- Disables unnecessary system services
+- Configures GPU memory allocation
+- Sets up network buffer optimizations
+- Reduces system swappiness for better performance
 
-## 🔍 Troubleshooting
+## Control Script Usage
 
-### Common Issues
+After installation, use the control script to manage your kiosk:
 
-| Problem | Solution |
-|---------|----------|
-| Input lag | Use wired peripherals, lower quality to 720p30 |
-| Video stuttering | Check network speed, ensure wired connection |
-| Audio issues | Restart PulseAudio: `pulseaudio -k && pulseaudio --start` |
-| Connection problems | Try different DNS (8.8.8.8), clear browser cache |
+```bash
+# Start the kiosk
+./geforce-now-control.sh start
 
-### Performance Tips
-- **Network**: Use wired Ethernet, optimize with `sudo ethtool -K eth0 gro off gso off tso off`
-- **Temperature**: Monitor with `vcgencmd measure_temp`, ensure good ventilation
-- **GeForce Now**: Start with 720p30, use "Balanced" quality setting
+# Stop the kiosk
+./geforce-now-control.sh stop
 
-## 📋 System Requirements
+# Restart the kiosk
+./geforce-now-control.sh restart
 
-### For GeForce NOW Streaming
-- **Minimum**: 15 Mbps download, <40ms latency
-- **Recommended**: 25+ Mbps download, <20ms latency
-- **Optimal**: 50+ Mbps download, wired Ethernet connection
-- **Network**: Wired connection strongly recommended over Wi-Fi
+# Check service status
+./geforce-now-control.sh status
 
-## 📁 File Structure
+# View live logs
+./geforce-now-control.sh logs
 
-```
-/home/gamer/
-├── geforce-now-launcher.sh         # Main GeForce NOW launcher
-├── Desktop/GeForceNow.desktop       # Desktop shortcut
-└── .config/openbox/                # Kiosk window manager config
+# Access desktop temporarily
+./geforce-now-control.sh desktop
+
+# Disable auto-start
+./geforce-now-control.sh disable
+
+# Re-enable auto-start
+./geforce-now-control.sh enable
 ```
 
-After running the optimizer script, you'll also have:
+## Accessing the Desktop
+
+If you need to access the desktop environment:
+
+1. **SSH Method** (recommended):
+   ```bash
+   ssh pi@your-raspberry-pi-ip
+   ./geforce-now-control.sh desktop
+   ```
+
+2. **Keyboard Shortcut**: Press `Ctrl+Alt+T` to open a terminal, then run:
+   ```bash
+   ./geforce-now-control.sh desktop
+   ```
+
+## Troubleshooting
+
+### Browser Won't Start
+- Check service status: `./geforce-now-control.sh status`
+- View logs: `./geforce-now-control.sh logs`
+- Restart service: `./geforce-now-control.sh restart`
+
+### Audio Issues
+- Check audio devices: `aplay -l`
+- Test audio: `speaker-test`
+- Restart PulseAudio: `pulseaudio -k && pulseaudio --start`
+
+### Performance Issues
+- Monitor system resources: `htop`
+- Check GPU status: `vcgencmd measure_temp`
+- Verify SSD mount: `df -h`
+
+### Network/Streaming Issues
+- Test connection: `ping play.geforcenow.com`
+- Check bandwidth: Use GeForce NOW's built-in network test
+- Verify DNS: `nslookup play.geforcenow.com`
+
+## Configuration Files
+
+The script creates several configuration files:
+
+- **Service**: `/etc/systemd/system/geforce-now-kiosk.service`
+- **Launch Script**: `/home/pi/start-geforce-now.sh`
+- **Control Script**: `/home/pi/geforce-now-control.sh`
+- **Chromium Config**: `/home/pi/.config/chromium/Default/Preferences`
+- **Audio Config**: `/home/pi/.pulse/daemon.conf`
+
+## Customization
+
+### Change Target URL
+Edit `/home/pi/start-geforce-now.sh` and modify the `GEFORCE_NOW_URL` variable:
+```bash
+GEFORCE_NOW_URL="https://your-custom-url.com"
 ```
-/home/gamer/
-├── launch-geforce-now-optimized.sh # Advanced optimized launcher
-├── monitor-gaming-performance.sh   # Performance monitoring
-└── geforce-now-troubleshooting.md  # Troubleshooting guide
+
+### Adjust Browser Flags
+Modify the Chromium flags in `/home/pi/start-geforce-now.sh` to suit your needs.
+
+### Display Settings
+Use `raspi-config` to adjust resolution and display options:
+```bash
+sudo raspi-config
 ```
 
-## 🔒 Security Notes
+## Hardware Recommendations
 
-- Kiosk user has limited system privileges
-- Auto-login enabled (suitable for dedicated gaming setups)
-- Emergency exit provides administrative access
-- Sudo access limited to specific gaming-related commands
+### Minimum Requirements
+- Raspberry Pi 5 (4GB RAM)
+- MicroSD card (Class 10, 16GB+)
+- Power supply (5V/3A USB-C)
+- HDMI cable and display
 
-## 🤝 Contributing
+### Recommended Setup
+- Raspberry Pi 5 (8GB RAM)
+- M2 HAT+ with NVMe SSD (256GB+)
+- Official Raspberry Pi Power Supply
+- Gigabit Ethernet or 5GHz Wi-Fi
+- Gamepad (Xbox/PlayStation controller)
+- Quality speakers or headphones
 
-Issues and pull requests are welcome! This project is based on community feedback from the [Raspberry Pi forums](https://forums.raspberrypi.com/viewtopic.php?t=368439).
+## GeForce NOW Setup
 
-## 🙏 Acknowledgments
+After the kiosk boots:
 
-- Raspberry Pi community for testing and feedback from the [forums](https://forums.raspberrypi.com/viewtopic.php?t=368439)
-- GeForce NOW performance optimization guides
-- Cloud gaming optimization tutorials for single-board computers
+1. **Sign in** to your NVIDIA account
+2. **Accept** any terms of service
+3. **Configure** streaming quality in settings
+4. **Test** your network connection
+5. **Start gaming**!
 
-## 📄 License
+## Security Considerations
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- The system runs in kiosk mode with reduced security for performance
+- Consider using a dedicated network or VLAN for the gaming device
+- Regularly update the system when accessing desktop mode
+- Monitor network traffic if security is a concern
+
+## Uninstalling
+
+To remove the kiosk setup:
+
+1. **Disable the service**:
+   ```bash
+   ./geforce-now-control.sh disable
+   ```
+
+2. **Remove service file**:
+   ```bash
+   sudo rm /etc/systemd/system/geforce-now-kiosk.service
+   sudo systemctl daemon-reload
+   ```
+
+3. **Reset auto-login**:
+   ```bash
+   sudo raspi-config
+   # Navigate to System Options > Boot / Auto Login > Desktop
+   ```
+
+## Support and Contributing
+
+- **Issues**: Report problems via GitHub issues
+- **Contributions**: Pull requests welcome
+- **Questions**: Check existing issues or create a new one
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Based on Raspberry Pi kiosk tutorials from [Pi Australia](https://raspberry.piaustralia.com.au/blogs/news/how-to-boot-chromium-into-kiosk-mode-on-a-raspberry-pi)
+- Inspired by [JonathanMH's dashboard setup](https://jonathanmh.com/raspberry-pi-4-kiosk-wall-display-dashboard/)
+- Community contributions and testing
 
 ---
 
-**Need help?** Check the troubleshooting guide or run the optimizer script for diagnostic tools.
+**Happy Gaming! 🎮**
