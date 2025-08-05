@@ -13,8 +13,8 @@ curl -fsSL https://raw.githubusercontent.com/WonderBoyHub/ki/main/install.sh | b
 ### 1. Download the Files
 ```bash
 # Download all files
-wget https://raw.githubusercontent.com/yourusername/ki/main/setup-geforce-now-kiosk.sh
-wget https://raw.githubusercontent.com/yourusername/ki/main/config.conf
+wget https://raw.githubusercontent.com/WonderBoyHub/ki/main/setup-geforce-now-kiosk.sh
+wget https://raw.githubusercontent.com/WonderBoyHub/ki/main/config.conf
 chmod +x setup-geforce-now-kiosk.sh
 ```
 

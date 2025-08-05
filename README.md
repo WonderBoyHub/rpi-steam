@@ -23,7 +23,7 @@ This script transforms your Raspberry Pi 5 into a dedicated GeForce NOW gaming k
 
 1. **Download and run the setup script:**
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/yourusername/ki/main/setup-geforce-now-kiosk.sh -o setup-geforce-now-kiosk.sh
+   curl -fsSL https://raw.githubusercontent.com/WonderBoyHub/ki/main/setup-geforce-now-kiosk.sh -o setup-geforce-now-kiosk.sh
    chmod +x setup-geforce-now-kiosk.sh
    ./setup-geforce-now-kiosk.sh
    ```
