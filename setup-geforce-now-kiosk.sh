@@ -16,7 +16,8 @@ NC='\033[0m' # No Color
 # Default configuration
 GEFORCE_NOW_URL="https://play.geforcenow.com"
 SERVICE_NAME="geforce-now-kiosk"
-USER="pi"
+# Fix: Use the actual current user instead of hardcoded "pi"
+USER="$(whoami)"
 
 print_header() {
     echo -e "${BLUE}"
